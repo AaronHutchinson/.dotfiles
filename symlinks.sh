@@ -10,15 +10,15 @@ if [ ! $LD -n ]; then
 fi
 
 declare -a dotfiles=(
-    "placeholder"
+    ".emacs.d/init.el"
 )
 
 for dotfile in "${dotfiles[@]}"
 do
-    [ ! -f "$HOME_DIR/$dotfile" ]
+    [ ! -e "$HOME_DIR/$dotfile" ]
     target_exists=$?
     
-    [ ! -f "$SCRIPT_DIR/$dotfile" ]
+    [ ! -e "$SCRIPT_DIR/$dotfile" ]
     source_exists=$?
 
     if [ $source_exists -eq 0 ]; then
