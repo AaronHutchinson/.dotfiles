@@ -6,7 +6,7 @@
 (defvar cmake-generator "")
 (defvar cmake-source-dir "")
 (defvar cmake-build-dir "")
-(defvar cmake-list-config-file "")
+(defvar cmake-config-file "")
 (defvar cmake-ctest-parallel-level 1)
 
 (defun cmake-clear-export-vars () (setq cmake-export-vars-list '()))
@@ -50,7 +50,7 @@
   (when (= (length cmake-build-dir) 0) (error "Error: no CMake build directory set."))
 )
 
-(defun cmake-format-end-vars ()
+(defun cmake-format-env-vars ()
   (setq result "")
   (dolist (elt cmake-export-vars-list result)
     (setq key (car elt))
@@ -75,48 +75,55 @@
   )
 )
 
-(defun cmake-get-configuration-file ()
-  (interactive)
+(defun cmake-set-configuration-file ()
   ;; save environment
   (setq start-insert-default-directory insert-default-directory)
 
   ;; read-file-name args
   (setq insert-default-directory nil)
-  (setq dir (if (> (length cmake-last-config-file) 0) (file-name-directory cmake-last-config-file) ""))
-  (setq default-filename (if (> (length cmake-last-config-file) 0) (file-name-nondirectory cmake-last-config-file) ""))
+  (setq dir (if (> (length cmake-config-file) 0) (file-name-directory cmake-config-file) ""))
+  (setq default-filename (if (> (length cmake-config-file) 0) (file-name-nondirectory cmake-config-file) ""))
   (setq default-filename-str (if (> (length default-filename) 0) (concat " (default " default-filename ")") ""))
   (setq prompt (concat "Choose emacs-cmake config file" default-filename-str ": "))
 
   (setq new-config-file (read-file-name prompt dir default-filename))
   (setq new-config-file (if (> (length new-config-file) 0)
 			    (expand-file-name new-config-file)
-			  cmake-last-config-file))
+			  cmake-config-file))
   (if (= (length new-config-file) 0) (error "Invalid configuration file!"))
 
   (load-file new-config-file)
-  (setq cmake-last-config-file new-config-file)
+  (setq cmake-config-file new-config-file)
+  (message "CMake configuration file set to: %s" cmake-config-file)
 
   ;; restore environment
   (setq insert-default-directory start-insert-default-directory)
 
-  (or cmake-last-config-file)
+  (cmake-check-vars)
+
+  (or cmake-config-file)
 )
 
 (defun cmake-run-edit-configuration ()
   (interactive)
-  (setq config-file (cmake-get-configuration-file))
+  (setq config-file (cmake-set-configuration-file))
   (find-file config-file)
 )
 
-(defun cmake-run-load-configuration ()
+(defun cmake-run-set-configuration ()
   (interactive)
-  (setq config-file (cmake-get-configuration-file))
+  (setq config-file (cmake-set-configuration-file))
   (load-file config-file)
 )
 
+(defun cmake-load-and-check-config ()
+  (if (and (> (length cmake-config-file) 0) (file-exists-p cmake-config-file))
+      (load-file cmake-config-file)
+    (cmake-run-set-configuration))
+)
+
 (defun cmake-configure-command ()
-  (interactive)
-  (cmake-check-vars)
+  (cmake-load-and-check-config)
   (concat
     (cmake-format-env-vars)
     "cmake"
@@ -128,31 +135,31 @@
   )
 )
 
-(defun cmake-run-configure ()
-  (interactive)
-  (compile (cmake-configure-command))
-)
-
 (defun cmake-build-command ()
-  (cmake-check-vars)
+  (cmake-load-and-check-config)
   (concat
     "cmake --build " (cmake-get-build-dir)
   )
 )
 
-(defun cmake-run-build ()
-  (interactive)
-  (compile (cmake-build-command))
-)
-
 (defun cmake-test-command ()
-  (cmake-check-vars)
+  (cmake-load-and-check-config)
   (concat
     "ctest"
     (cmake-format-ctest-args)
     " --test-dir " (cmake-get-build-dir)
     " -j " (number-to-string (cmake-get-ctest-parallel-level))
   )
+)
+
+(defun cmake-run-configure ()
+  (interactive)
+  (compile (cmake-configure-command))
+)
+
+(defun cmake-run-build ()
+  (interactive)
+  (compile (cmake-build-command))
 )
 
 (defun cmake-run-test ()
