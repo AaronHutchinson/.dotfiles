@@ -39,24 +39,24 @@
 (tool-bar-mode 0)                                           ;; Disable the toolbar
 (menu-bar-mode 0)                                           ;; Disable the menu bar
 (scroll-bar-mode 0)                                         ;; Disable visible scrollbar
-(column-number-mode 1)
+(column-number-mode 1)                                      ;; Add column number to minibuffer
 (show-paren-mode 1)                                         ;; Highlight matching parens
 (blink-cursor-mode 0)
-(global-hl-line-mode 1)
-(delete-selection-mode 1)
-(setq inhibit-startup-message t)
-(setq visible-bell t)
-(setq help-window-select t)
-(setq compilation-scroll-output 1)
-(setq backup-directory-alist `(("." . "~/.emacs-backups")))
+(global-hl-line-mode 1)                                     ;; Highlight line under point
+(delete-selection-mode 1)                                   ;; Typed text replaces any selection
+(setq inhibit-startup-message t)                            ;; Hide message when starting Emacs
+(setq visible-bell t)                                       ;; Prevent annoying beeping
+(setq help-window-select t)                                 ;; Select help window when opened
+(setq compilation-scroll-output 1)                          ;; Auto scroll compilation window
+(setq backup-directory-alist `(("." . "~/.emacs-backups"))) ;; Directory to store autosaves
 (setq auto-save-no-message 1)                               ;; Disable autosave messages
 (setq scroll-preserve-screen-position 1)                    ;; Preserve point position when scrolling
-(setq scroll-margin 10)
+(setq scroll-margin 10)                                     ;; Scroll window when cursor reaches margin
 (setq scroll-conservatively 10000)
-(setq scroll-step 1)
-(setq ibuffer-default-sorting-mode 'alphabetic)
-(setq display-line-numbers-width 3)
-(setq compilation-first-error 'first-error)
+(setq scroll-step 1)                                        ;; Scroll this many lines at a time
+(setq ibuffer-default-sorting-mode 'alphabetic)             ;; Sort Ibuffer by this ordering
+(setq display-line-numbers-width 3)                         ;; Line number gutter width
+(setq compilation-first-error 'first-error)                 ;; Stop scrolling compilation on first error
 
 ;; Ensure terminal scrolling does not break on output
 (eval-after-load "term" '(progn (setq term-scroll-to-bottom-on-output t)))
@@ -79,9 +79,6 @@
 
 (kill-buffer "*scratch*") ;; Prevent *scratch* buffer from opening by default
 (setq minibuffer-message-timeout nil) ;; Prevent minibuffer message from automatically disappearing
-
-
-(setq text-quoting-style 'grave)
 
 (defun comment-or-uncomment-region-or-line ()
   "Comments or uncomments the region of the current line if there's no active region."
@@ -108,7 +105,6 @@
 ;; --------------------------------------- ;;
 
 ;; CMake
-
 (load-file (concat emacs-settings-dir cmake-commands-filename))
 
 ;; git-gutter
@@ -127,8 +123,6 @@
 ;;               KEYBINDINGS               ;;
 ;; --------------------------------------- ;;
 (load-file (concat emacs-settings-dir keybindings-filename))
-
-
 
 
 ;; --------------------------------------- ;;
