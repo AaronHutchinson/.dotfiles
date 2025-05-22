@@ -1,16 +1,22 @@
-(setq cmake-commands-filename "cmake-commands.el")
-(setq keybindings-filename "keybindings.el")
+;;; custom-init.el --- Defines my custom Emacs environment.
+
+;;; Commentary:
+;; This is here to silence flycheck.
+
+;;; Code:
+(defvar cmake-commands-filename "cmake-commands.el")
+(defvar keybindings-filename "keybindings.el")
 
 (unless (boundp 'emacs-settings-dir)
-    (setq true-filename (file-truename load-file-name))
-    (setq emacs-settings-dir (file-name-directory true-filename)))
+    (defvar true-filename (file-truename load-file-name))
+    (defvar emacs-settings-dir (file-name-directory true-filename)))
 
 
 ;; --------------------------------------- ;;
 ;;            PACKAGE INSTALLS             ;;
 ;; --------------------------------------- ;;
 
-(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3") ; Workaround for "failed to download 'MELPA' archive"
+(defvar gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3") ; Workaround for "failed to download 'MELPA' archive"
 
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
@@ -19,9 +25,12 @@
 (unless package-archive-contents
   (package-refresh-contents))
 
-(setq my-pkgs '(
+(defvar my-pkgs '(
+		company
+		flycheck
 		git-gutter
 		gnu-elpa-keyring-update
+		lsp-mode
 		magit
 		yaml-mode
 ))
@@ -47,6 +56,7 @@
 (setq inhibit-startup-message t)                            ;; Hide message when starting Emacs
 (setq visible-bell t)                                       ;; Prevent annoying beeping
 (setq help-window-select t)                                 ;; Select help window when opened
+(defvar compilation-scroll-output)
 (setq compilation-scroll-output 1)                          ;; Auto scroll compilation window
 (setq backup-directory-alist `(("." . "~/.emacs-backups"))) ;; Directory to store autosaves
 (setq auto-save-no-message 1)                               ;; Disable autosave messages
@@ -54,11 +64,14 @@
 (setq scroll-margin 10)                                     ;; Scroll window when cursor reaches margin
 (setq scroll-conservatively 10000)
 (setq scroll-step 1)                                        ;; Scroll this many lines at a time
+(defvar ibuffer-default-sorting-mode)
 (setq ibuffer-default-sorting-mode 'alphabetic)             ;; Sort Ibuffer by this ordering
 (setq display-line-numbers-width 3)                         ;; Line number gutter width
+(defvar compilation-first-error)
 (setq compilation-first-error 'first-error)                 ;; Stop scrolling compilation on first error
 
 ;; Ensure terminal scrolling does not break on output
+(defvar term-scroll-to-bottom-on-output)
 (eval-after-load "term" '(progn (setq term-scroll-to-bottom-on-output t)))
 
 ;; This apparently *stops* the cursor from blinking?
@@ -66,8 +79,8 @@
 (setq visible-cursor nil)
 
 ;; Keep default directory as initial value when starting Emacs
-(setq initial-default-directory default-directory)
-(add-hook 'find-file-hook (lambda () (setq default-directory initial-default-directory)))
+;;(setq initial-default-directory default-directory)
+;;(add-hook 'find-file-hook (lambda () (setq default-directory initial-default-directory)))
 
 ;; Kill *Completions* buffer when done
 (add-hook 'minibuffer-exit-hook
@@ -81,7 +94,7 @@
 (setq minibuffer-message-timeout nil) ;; Prevent minibuffer message from automatically disappearing
 
 (defun comment-or-uncomment-region-or-line ()
-  "Comments or uncomments the region of the current line if there's no active region."
+  "Toggle comment on the region of the current line if there's no active region."
   (interactive)
   (let (beg end)
     (if (region-active-p)
@@ -90,7 +103,9 @@
     (comment-or-uncomment-region beg end)
     ))
 
-(defun display-startup-echo-area-message () (message "")) ;; Hide startup message from minibuffer
+(defun display-startup-echo-area-message ()
+  "Hide startup message from minibuffer."
+  (message ""))
 
 ;; --------------------------------------- ;;
 ;;            FILE TYPE SETTINGS           ;;
@@ -107,6 +122,19 @@
 ;; CMake
 (load-file (concat emacs-settings-dir cmake-commands-filename))
 
+;; company
+(add-hook 'after-init-hook 'global-company-mode)
+
+;; flycheck
+(global-flycheck-mode +1)
+(add-to-list 'display-buffer-alist
+             `(,(rx bos "*Flycheck errors*" eos)
+               (display-buffer-reuse-window
+		display-buffer-in-side-window)
+               (side            . bottom)
+               (reusable-frames . visible)
+               (window-height   . 0.20)))
+
 ;; git-gutter
 (global-git-gutter-mode +1)
 (setq git-gutter:always-show-separator 1)
@@ -118,6 +146,9 @@
 (set-face-foreground 'git-gutter:modified "Purple")
 (set-face-foreground 'git-gutter:deleted "Red")
 
+;; lsp-mode
+(add-hook 'c-mode-hook 'lsp)
+(add-hook 'c++-mode-hook 'lsp)
 
 ;; --------------------------------------- ;;
 ;;               KEYBINDINGS               ;;
