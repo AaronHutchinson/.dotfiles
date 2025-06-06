@@ -32,6 +32,7 @@
 		gnu-elpa-keyring-update
 		lsp-mode
 		magit
+		which-key
 		yaml-mode
 ))
 
@@ -149,6 +150,11 @@
 ;; lsp-mode
 (add-hook 'c-mode-hook 'lsp)
 (add-hook 'c++-mode-hook 'lsp)
+
+;; which-key
+(setq which-key-idle-delay 3.0)       ;; Delay in seconds before which-key buffer appears.
+(setq which-key-add-column-padding 2) ;; Padding between column of keys.
+(which-key-mode)
 
 ;; --------------------------------------- ;;
 ;;               KEYBINDINGS               ;;
