@@ -9,10 +9,3 @@
 
 (setq custom-init-filename "custom-init.el")
 (load-file (concat emacs-settings-dir custom-init-filename))
-
-;; --------------------------------------- ;;
-;;             ADDED BY EMACS              ;;
-;; --------------------------------------- ;;
-
-
-

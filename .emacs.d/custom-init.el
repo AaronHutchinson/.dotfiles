@@ -4,6 +4,7 @@
 ;; This is here to silence flycheck.
 
 ;;; Code:
+(defvar custom-file-name "custom-file.el")
 (defvar cmake-commands-filename "cmake-commands.el")
 (defvar keybindings-filename "keybindings.el")
 
@@ -93,6 +94,8 @@
 
 (kill-buffer "*scratch*") ;; Prevent *scratch* buffer from opening by default
 (setq minibuffer-message-timeout nil) ;; Prevent minibuffer message from automatically disappearing
+
+(setq custom-file (concat emacs-settings-dir custom-file-name))
 
 (defun comment-or-uncomment-region-or-line ()
   "Toggle comment on the region of the current line if there's no active region."
