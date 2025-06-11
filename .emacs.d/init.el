@@ -13,7 +13,7 @@
 (defvar emacs-settings-dir (file-name-directory true-filename))
 
 ;; --------------------------------------- ;;
-;;            PACKAGE INSTALLS             ;;
+;;             PACKAGE REFRESH             ;;
 ;; --------------------------------------- ;;
 
 (defvar gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3") ; Workaround for "failed to download 'MELPA' archive"
@@ -24,21 +24,6 @@
 
 (unless package-archive-contents
   (package-refresh-contents))
-
-(defvar my-pkgs '(
-		company
-		flycheck
-		git-gutter
-		gnu-elpa-keyring-update
-		lsp-mode
-		magit
-		which-key
-		yaml-mode
-))
-
-(dolist (pkg my-pkgs)
-  (unless (package-installed-p pkg)
-    (package-install pkg)))
 
 ;; --------------------------------------- ;;
 ;;                 OPTIONS                 ;;
@@ -119,44 +104,70 @@
 
 
 ;; --------------------------------------- ;;
-;;             PACKAGE OPTIONS             ;;
+;;                 PACKAGES                ;;
 ;; --------------------------------------- ;;
 
 ;; CMake
 (load-file (concat emacs-settings-dir cmake-commands-filename))
 
-;; company
-(add-hook 'after-init-hook 'global-company-mode)
+(use-package company
+  :ensure t
+  :config (global-company-mode)
+  )
 
-;; flycheck
-(global-flycheck-mode +1)
-(add-to-list 'display-buffer-alist
-             `(,(rx bos "*Flycheck errors*" eos)
-               (display-buffer-reuse-window
-		display-buffer-in-side-window)
-               (side            . bottom)
-               (reusable-frames . visible)
-               (window-height   . 0.20)))
+(use-package flycheck
+  :ensure t
+  :config
+  (global-flycheck-mode +1)
+  ;; Customize error list display:
+  (add-to-list 'display-buffer-alist
+               `(,(rx bos "*Flycheck errors*" eos)
+		 (display-buffer-reuse-window
+		  display-buffer-in-side-window)
+		 (side            . bottom)
+		 (reusable-frames . visible)
+		 (window-height   . 0.20)))
+  )
 
-;; git-gutter
-(global-git-gutter-mode +1)
-(setq git-gutter:always-show-separator 1)
-(setq git-gutter:update-interval 1)
-(setq git-gutter:modified-sign "*")
-(setq git-gutter:added-sign "+")
-(setq git-gutter:deleted-sign "-")
-(set-face-foreground 'git-gutter:added "Green")
-(set-face-foreground 'git-gutter:modified "Purple")
-(set-face-foreground 'git-gutter:deleted "Red")
+(use-package git-gutter
+  :ensure t
+  :config
+  (global-git-gutter-mode +1)
+  (setq git-gutter:always-show-separator 1)
+  (setq git-gutter:update-interval 1)
+  (setq git-gutter:modified-sign "*")
+  (setq git-gutter:added-sign "+")
+  (setq git-gutter:deleted-sign "-")
+  (set-face-foreground 'git-gutter:added "Green")
+  (set-face-foreground 'git-gutter:modified "Purple")
+  (set-face-foreground 'git-gutter:deleted "Red")
+  )
 
-;; lsp-mode
-(add-hook 'c-mode-hook 'lsp)
-(add-hook 'c++-mode-hook 'lsp)
+(use-package gnu-elpa-keyring-update
+  :ensure t
+  )
 
-;; which-key
-(setq which-key-idle-delay 3.0)       ;; Delay in seconds before which-key buffer appears.
-(setq which-key-add-column-padding 2) ;; Padding between column of keys.
-(which-key-mode)
+(use-package lsp-mode
+  :ensure t
+  :hook ((c-mode c++-mode) . lsp)
+  )
+
+(use-package magit
+  :ensure t
+  )
+
+(use-package which-key
+  :ensure t
+  :init
+  (setq which-key-idle-delay 3.0)       ;; Delay in seconds before which-key buffer appears.
+  (setq which-key-add-column-padding 2) ;; Padding between column of keys.
+  :config
+  (which-key-mode)
+  )
+
+(use-package yaml-mode
+  :ensure t
+  )
 
 ;; --------------------------------------- ;;
 ;;               KEYBINDINGS               ;;
