@@ -45,6 +45,9 @@ do
 	continue
     fi
 
-    $LN -sf $SCRIPT_DIR/$dotfile $HOME_DIR/$dotfile
+    target_full_path=$HOME_DIR/$dotfile
+    target_dir="$(dirname "$HOME_DIR/$dotfile")"
+    mkdir -p $target_dir
+    $LN -sf $SCRIPT_DIR/$dotfile $target_full_path
 done
 
