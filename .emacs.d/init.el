@@ -7,6 +7,7 @@
 (defvar custom-file-name "custom-file.el")
 (defvar cmake-commands-filename "cmake-commands.el")
 (defvar keybindings-filename "keybindings.el")
+(defvar local-settings-filename "local.el")
 
 ;; Get the path to the emacs settings directory, resolving symlinks.
 (defvar true-filename (file-truename load-file-name))
@@ -193,3 +194,7 @@
 (advice-add 'native-compile-async-skip-p
 	    :around 'fixed-native-compile-async-skip-p)
 
+
+(defvar local-settings-file (concat emacs-settings-dir local-settings-filename))
+(if (file-exists-p local-settings-file)
+    (load-file local-settings-file))
