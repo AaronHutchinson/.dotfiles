@@ -139,6 +139,11 @@
 ;; CMake
 (load-file (concat emacs-settings-dir cmake-commands-filename))
 
+(use-package apheleia
+  :ensure t
+  :hook ((c-mode c++-mode) . apheleia-mode)
+  )
+
 (use-package company
   :ensure t
   :config (global-company-mode)
