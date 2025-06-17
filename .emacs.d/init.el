@@ -51,8 +51,6 @@
 (setq scroll-margin 10)                                     ;; Scroll window when cursor reaches margin
 (setq scroll-conservatively 10000)
 (setq scroll-step 1)                                        ;; Scroll this many lines at a time
-(defvar ibuffer-default-sorting-mode)
-(setq ibuffer-default-sorting-mode 'alphabetic)             ;; Sort Ibuffer by this ordering
 (setq display-line-numbers-width 3)                         ;; Line number gutter width
 (defvar compilation-first-error)
 (setq compilation-first-error 'first-error)                 ;; Stop scrolling compilation on first error
@@ -72,9 +70,9 @@
 ;; Kill *Completions* buffer when done
 (add-hook 'minibuffer-exit-hook
 	  #'(lambda ()
-	     (let ((buffer "*Completions*"))
-	       (and (get-buffer buffer)
-		    (kill-buffer buffer)))))
+	      (let ((buffer "*Completions*"))
+		(and (get-buffer buffer)
+		     (kill-buffer buffer)))))
 
 
 (kill-buffer "*scratch*") ;; Prevent *scratch* buffer from opening by default
@@ -95,6 +93,36 @@
 (defun display-startup-echo-area-message ()
   "Hide startup message from minibuffer."
   (message ""))
+
+;; --------------------------------------- ;;
+;;                 IBUFFER                 ;;
+;; --------------------------------------- ;;
+(setq ibuffer-saved-filter-groups
+      '(("home"
+	 ("Code" (or (mode . c-mode)
+		     (mode . c++-mode)
+		     (mode . emacs-lisp-mode)
+		     (mode . python-mode)
+		     (mode . sh-mode)))
+	 ("CMake" (or (basename . "CMakeLists.txt")
+		      (basename . "Makefile")))
+	 ("Data" (or (mode . yaml-mode)
+		     (file-extension . "json")
+		     (file-extension . "csv")))
+	 ("Shells" (mode . shell-mode))
+	 ("Dired" (or  (derived-mode . dired-mode)
+		       (derived-mode . image-mode)))
+	 ("Stars" (or  (starred-name)
+		       (process)))
+	 )))
+(add-hook 'ibuffer-mode-hook
+	  (lambda ()
+	    (ibuffer-switch-to-saved-filter-groups "home")
+	    (setq ibuffer-hidden-filter-groups '("Stars"))
+	    ))
+(setq ibuffer-show-empty-filter-groups nil)
+(defvar ibuffer-default-sorting-mode)
+(setq ibuffer-default-sorting-mode 'alphabetic)     ;; Sort Ibuffer by this ordering
 
 ;; --------------------------------------- ;;
 ;;            FILE TYPE SETTINGS           ;;
