@@ -78,8 +78,6 @@
 (kill-buffer "*scratch*") ;; Prevent *scratch* buffer from opening by default
 (setq minibuffer-message-timeout nil) ;; Prevent minibuffer message from automatically disappearing
 
-(setq custom-file (concat emacs-settings-dir custom-file-name))
-
 (defun comment-or-uncomment-region-or-line ()
   "Toggle comment on the region of the current line if there's no active region."
   (interactive)
@@ -93,6 +91,9 @@
 (defun display-startup-echo-area-message ()
   "Hide startup message from minibuffer."
   (message ""))
+
+(setq custom-file (concat emacs-settings-dir custom-file-name))
+(load-file (concat emacs-settings-dir custom-file-name))
 
 ;; --------------------------------------- ;;
 ;;                 IBUFFER                 ;;
