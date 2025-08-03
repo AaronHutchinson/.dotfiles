@@ -54,6 +54,7 @@
 (setq display-line-numbers-width 3)                         ;; Line number gutter width
 (defvar compilation-first-error)
 (setq compilation-first-error 'first-error)                 ;; Stop scrolling compilation on first error
+(put 'dired-find-alternate-file 'disabled nil)
 
 ;; Ensure terminal scrolling does not break on output
 (defvar term-scroll-to-bottom-on-output)
