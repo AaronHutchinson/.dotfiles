@@ -125,10 +125,11 @@
 (defun cmake-configure-command ()
   (cmake-load-and-check-config)
   (concat
+    "cd \"" (cmake-get-source-dir) "\""
+    " && "
     (cmake-format-env-vars)
     "cmake"
     " -G " (cmake-get-generator)
-    " -S \"" (cmake-get-source-dir) "\""
     " -B \"" (cmake-get-build-dir) "\""
     " --fresh"
     (cmake-format-defines)
@@ -138,16 +139,19 @@
 (defun cmake-build-command ()
   (cmake-load-and-check-config)
   (concat
-    "cmake --build " (cmake-get-build-dir)
+    "cd \"" (cmake-get-build-dir) "\""
+    " && "
+    "cmake --build ."
   )
 )
 
 (defun cmake-test-command ()
   (cmake-load-and-check-config)
   (concat
+    "cd \"" (cmake-get-build-dir) "\""
+    " && "
     "ctest"
     (cmake-format-ctest-args)
-    " --test-dir " (cmake-get-build-dir)
     " -j " (number-to-string (cmake-get-ctest-parallel-level))
   )
 )
