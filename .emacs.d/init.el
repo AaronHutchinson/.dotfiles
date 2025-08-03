@@ -146,6 +146,10 @@
   :hook ((c-mode c++-mode) . apheleia-mode)
   )
 
+(use-package cmake-mode
+  :ensure t
+  )
+
 (use-package company
   :ensure t
   :config (global-company-mode)
