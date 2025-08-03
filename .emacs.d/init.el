@@ -123,6 +123,20 @@
 	    (setq ibuffer-hidden-filter-groups '("Stars"))
 	    ))
 (setq ibuffer-show-empty-filter-groups nil)
+
+;; Adjust IBuffer formatting
+(setq ibuffer-formats
+      '((mark modified read-only " "
+	      (name 30 30 :left :elide)
+	      " "
+	      (size 9 -1 :right)
+	      " "
+	      (mode 16 16 :left :elide)
+	      " " filename-and-process)
+	(mark " "
+	      (name 16 -1)
+	      " " filename)))
+
 (defvar ibuffer-default-sorting-mode)
 (setq ibuffer-default-sorting-mode 'alphabetic)     ;; Sort Ibuffer by this ordering
 
