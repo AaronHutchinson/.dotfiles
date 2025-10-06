@@ -41,6 +41,7 @@
 (global-hl-line-mode 1)                                     ;; Highlight line under point
 (delete-selection-mode 1)                                   ;; Typed text replaces any selection
 (setq inhibit-startup-message t)                            ;; Hide message when starting Emacs
+(setq inhibit-startup-buffer-menu 1)                        ;; Dont display buffer list when opening multiple files
 (setq visible-bell t)                                       ;; Prevent annoying beeping
 (setq help-window-select t)                                 ;; Select help window when opened
 (defvar compilation-scroll-output)
