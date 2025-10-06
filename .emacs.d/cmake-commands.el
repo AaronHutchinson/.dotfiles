@@ -8,6 +8,9 @@
 (defvar cmake-build-dir "")
 (defvar cmake-config-file "")
 (defvar cmake-ctest-parallel-level 1)
+(defvar cmake-run-command-command "")
+(defvar cmake-configure-prefix "")
+(defvar cmake-build-prefix "")
 
 (defun cmake-clear-export-vars () (setq cmake-export-vars-list '()))
 (defun cmake-get-export-var (key) (cdr (assoc key cmake-export-vars-list)))
@@ -43,6 +46,10 @@
 (defun cmake-get-build-dir () (or cmake-build-dir))
 (defun cmake-set-ctest-parallel-level (level) (setq cmake-ctest-parallel-level level))
 (defun cmake-get-ctest-parallel-level () (or cmake-ctest-parallel-level))
+(defun cmake-set-configure-prefix (cmd) (setq cmake-configure-prefix cmd))
+(defun cmake-set-build-prefix (cmd) (setq cmake-build-prefix cmd))
+(defun cmake-set-run-command (cmd) (setq cmake-run-command-command cmd))
+(defun cmake-get-run-command () (or cmake-run-command-command))
 
 (defun cmake-check-vars ()
   (when (= (length cmake-generator) 0) (error "Error: no CMake generator specified."))
@@ -128,6 +135,7 @@
     "cd \"" (cmake-get-source-dir) "\""
     " && "
     (cmake-format-env-vars)
+    cmake-configure-prefix " "
     "cmake"
     " -G " (cmake-get-generator)
     " -B \"" (cmake-get-build-dir) "\""
@@ -141,6 +149,7 @@
   (concat
     "cd \"" (cmake-get-build-dir) "\""
     " && "
+    cmake-build-prefix " "
     "cmake --build ."
   )
 )
@@ -155,6 +164,11 @@
     " -j " (number-to-string (cmake-get-ctest-parallel-level))
   )
 )
+
+(defun cmake-run-command ()
+  (cmake-load-and-check-config)
+  (cmake-get-run-command)
+  )
 
 (defun cmake-run-configure ()
   (interactive)
@@ -171,3 +185,20 @@
   (compile (cmake-test-command))
 )
 
+(defun cmake-run-executable ()
+  (interactive)
+  (compile (cmake-run-command))
+)
+
+(defun cmake-run-all ()
+  (interactive)
+  (compile (concat (cmake-configure-command)
+	  " && "
+	  (cmake-build-command)
+	  " && "
+	  (cmake-test-command)
+	  " && "
+	  (cmake-run-command)
+	  )
+	   )
+  )

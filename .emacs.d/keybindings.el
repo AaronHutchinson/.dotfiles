@@ -12,5 +12,5 @@
 (global-set-key (kbd "C-c c") 'cmake-run-configure)
 (global-set-key (kbd "C-c b") 'cmake-run-build)
 (global-set-key (kbd "C-c t") 'cmake-run-test)
-
-
+(global-set-key (kbd "C-c x") 'cmake-run-executable)
+(global-set-key (kbd "C-c a") 'cmake-run-all)
