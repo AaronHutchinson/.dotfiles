@@ -53,6 +53,7 @@
 (setq scroll-conservatively 10000)
 (setq scroll-step 1)                                        ;; Scroll this many lines at a time
 (setq display-line-numbers-width 3)                         ;; Line number gutter width
+(setq-default indent-tabs-mode nil)
 (defvar compilation-first-error)
 (setq compilation-first-error 'first-error)                 ;; Stop scrolling compilation on first error
 (put 'dired-find-alternate-file 'disabled nil)
