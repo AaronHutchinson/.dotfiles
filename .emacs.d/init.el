@@ -137,6 +137,7 @@
 ;; --------------------------------------- ;;
 (add-to-list 'auto-mode-alist '("\\.json\\'" . yaml-mode))
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
+(add-hook 'python-mode-hook (lambda() (setq whitespace-line-column 100)))
 
 
 ;; --------------------------------------- ;;
