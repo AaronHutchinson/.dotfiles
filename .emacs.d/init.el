@@ -139,6 +139,17 @@
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 
 
+;; --------------------------------------- ;;
+;;             WHITESPACE MODE             ;;
+;; --------------------------------------- ;;
+(defvar whitespace-display-mappings `((space-mark 32 [183] [46])
+				      (space-mark 160 [164] [96])
+				      (tab-mark 9 [187 9] [92 9])))
+(defvar whitespace-style `(face tabs spaces trailing lines-tail space-before-tab
+				newline space-after-tab space-mark tab-mark
+				newline-mark missing-newline-at-eof))
+(add-hook 'prog-mode-hook 'whitespace-mode)
+
 
 ;; --------------------------------------- ;;
 ;;                 PACKAGES                ;;

@@ -354,9 +354,9 @@
 
    ;; Whitespace
    `(whitespace-space ((t ,(list :background gruber-darker-patched-bg
-                                 :foreground gruber-darker-patched-bg+1))))
+                                 :foreground gruber-darker-patched-bg+3))))
    `(whitespace-tab ((t ,(list :background gruber-darker-patched-bg
-                               :foreground gruber-darker-patched-bg+1))))
+                               :foreground gruber-darker-patched-bg+3))))
    `(whitespace-hspace ((t ,(list :background gruber-darker-patched-bg
                                   :foreground gruber-darker-patched-bg+2))))
    `(whitespace-line ((t ,(list :background gruber-darker-patched-bg+2
