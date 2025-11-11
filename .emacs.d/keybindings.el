@@ -30,3 +30,45 @@ If point was already at that position, move point to beginning of line."
 
 (keymap-global-set "<home>" 'smart-beginning-of-line)
 (keymap-global-set "S-<home>" 'smart-beginning-of-line-with-highlight)
+
+
+(defun move-text-internal (arg)
+  "Move region (transient-mark-mode active) or current line.
+Moves ARG lines down when ARG > 0, or up otherwise."
+  (cond
+   ((and mark-active transient-mark-mode)
+    (let ((point-was-first (> (point) (mark))))
+      (if point-was-first (exchange-point-and-mark))
+      (let ((column (current-column))
+            (text (delete-and-extract-region (point) (mark))))
+        (forward-line arg)
+        (move-to-column column t)
+        (push-mark (point))
+        (insert text)
+        )
+      (unless point-was-first (exchange-point-and-mark))
+      (setq deactivate-mark nil)
+      )
+    )
+   (t
+    (let ((column (current-column)))
+      (beginning-of-line)
+      (when (or (> arg 0) (not (bobp)))
+        (forward-line)
+        (when (or (< arg 0) (not (eobp)))
+          (transpose-lines arg))
+        (forward-line -1))
+      (move-to-column column t)))))
+
+(defun move-text-down (arg)
+  "Move region (transient-mark-mode active) or current line ARG lines down."
+  (interactive "*p")
+  (move-text-internal arg))
+
+(defun move-text-up (arg)
+  "Move region (transient-mark-mode active) or current line ARG lines up."
+  (interactive "*p")
+  (move-text-internal (- arg)))
+
+(global-set-key [M-up] 'move-text-up)
+(global-set-key [M-down] 'move-text-down)
