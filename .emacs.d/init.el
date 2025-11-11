@@ -81,16 +81,6 @@
 (kill-buffer "*scratch*") ;; Prevent *scratch* buffer from opening by default
 (setq minibuffer-message-timeout nil) ;; Prevent minibuffer message from automatically disappearing
 
-(defun comment-or-uncomment-region-or-line ()
-  "Toggle comment on the region of the current line if there's no active region."
-  (interactive)
-  (let (beg end)
-    (if (region-active-p)
-	(setq beg (region-beginning) end (region-end))
-      (setq beg (line-beginning-position) end (line-end-position)))
-    (comment-or-uncomment-region beg end)
-    ))
-
 (defun display-startup-echo-area-message ()
   "Hide startup message from minibuffer."
   (message ""))
