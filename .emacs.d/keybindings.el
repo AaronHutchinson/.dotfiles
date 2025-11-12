@@ -17,19 +17,13 @@
 
 Move point to the first non-whitespace character on the current line.
 If point was already at that position, move point to beginning of line."
-  (interactive)
+  (interactive "^")
   (let ((oldpos (point)))
     (back-to-indentation)
     (and (= oldpos (point))
 	 (beginning-of-line))))
 
-(defun smart-beginning-of-line-with-highlight ()
-  (interactive)
-  (unless mark-active (set-mark (point)))
-  (smart-beginning-of-line))
-
 (keymap-global-set "<home>" 'smart-beginning-of-line)
-(keymap-global-set "S-<home>" 'smart-beginning-of-line-with-highlight)
 
 
 (defun move-text-internal (arg)
