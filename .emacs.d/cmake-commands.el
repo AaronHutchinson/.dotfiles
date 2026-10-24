@@ -1,3 +1,7 @@
+;;; cmake -- Summary:
+;;; A package for configuring CMake projects.
+;;; Commentary:
+;;; Code:
 (provide 'cmake-commands)
 
 (defvar cmake-export-vars-list '())
@@ -12,26 +16,44 @@
 (defvar cmake-configure-prefix "")
 (defvar cmake-build-prefix "")
 
-(defun cmake-clear-export-vars () (setq cmake-export-vars-list '()))
-(defun cmake-get-export-var (key) (cdr (assoc key cmake-export-vars-list)))
+(defun cmake-clear-export-vars ()
+  "Clear the export list."
+  (setq cmake-export-vars-list '())
+)
+(defun cmake-get-export-var (key)
+  "Retrieve the export variable associated with KEY."
+  (cdr (assoc key cmake-export-vars-list))
+)
 (defun cmake-set-export-var (name &optional val)
+  "Set the export variable NAME to VAL, or to nothing if VAL is omitted."
   (or val (setq val ""))
   (when (> (length val) 0)
     (push (cons name val) cmake-export-vars-list)
   )
 )
 
-(defun cmake-clear-defines () (setq cmake-defines-list '()))
-(defun cmake-get-define (key) (cdr (assoc key cmake-defines-list)))
+(defun cmake-clear-defines ()
+  "Clear the define list."
+  (setq cmake-defines-list '())
+)
+(defun cmake-get-define (key)
+  "Retrieve the define variable associated with KEY."
+  (cdr (assoc key cmake-defines-list))
+)
 (defun cmake-set-define (name &optional val)
+  "Set the define variable NAME to VAL, or to nothing if VAL is omitted."
   (or val (setq val ""))
   (when (> (length val) 0)
     (push (cons name val) cmake-defines-list)
   )
 )
 
-(defun cmake-ctest-clear-args() (setq cmake-ctest-args-list '()))
+(defun cmake-ctest-clear-args()
+  "Clear the ctest argument list."
+  (setq cmake-ctest-args-list '())
+)
 (defun cmake-ctest-set-arg (&optional val)
+  "Set the ctest argument VAL."
   (or val (setq val ""))
   (when (> (length val) 0)
     (push val cmake-ctest-args-list)
@@ -83,31 +105,26 @@
 )
 
 (defun cmake-set-configuration-file ()
-  ;; save environment
-  (setq start-insert-default-directory insert-default-directory)
+  (let (
+        (insert-default-directory nil)
+        (dir (if (> (length cmake-config-file) 0) (file-name-directory cmake-config-file) ""))
+        (default-filename (if (> (length cmake-config-file) 0) (file-name-nondirectory cmake-config-file) ""))
+        )
+    (setq default-filename-str (if (> (length default-filename) 0) (concat " (default " default-filename ")") ""))
+    (setq prompt (concat "Choose emacs-cmake config file" default-filename-str ": "))
 
-  ;; read-file-name args
-  (setq insert-default-directory nil)
-  (setq dir (if (> (length cmake-config-file) 0) (file-name-directory cmake-config-file) ""))
-  (setq default-filename (if (> (length cmake-config-file) 0) (file-name-nondirectory cmake-config-file) ""))
-  (setq default-filename-str (if (> (length default-filename) 0) (concat " (default " default-filename ")") ""))
-  (setq prompt (concat "Choose emacs-cmake config file" default-filename-str ": "))
-
-  (setq new-config-file (read-file-name prompt dir default-filename))
-  (setq new-config-file (if (> (length new-config-file) 0)
-			    (expand-file-name new-config-file)
-			  cmake-config-file))
-  (if (= (length new-config-file) 0) (error "Invalid configuration file!"))
+    (setq new-config-file (read-file-name prompt dir default-filename))
+    (setq new-config-file (if (> (length new-config-file) 0)
+                              (expand-file-name new-config-file)
+                            cmake-config-file))
+    (if (= (length new-config-file) 0) (error "Invalid configuration file!"))
+    )
 
   (load-file new-config-file)
   (setq cmake-config-file new-config-file)
   (message "CMake configuration file set to: %s" cmake-config-file)
 
-  ;; restore environment
-  (setq insert-default-directory start-insert-default-directory)
-
   (cmake-check-vars)
-
   (or cmake-config-file)
 )
 

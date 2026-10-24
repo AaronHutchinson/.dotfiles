@@ -42,7 +42,8 @@
 (delete-selection-mode 1)                                   ;; Typed text replaces any selection
 (setq inhibit-startup-message t)                            ;; Hide message when starting Emacs
 (setq inhibit-startup-buffer-menu 1)                        ;; Dont display buffer list when opening multiple files
-(setq visible-bell t)                                       ;; Prevent annoying beeping
+(setq visible-bell nil)                                     ;; Prevent annoying beeping
+(setq ring-bell-function #'ignore)
 (setq help-window-select t)                                 ;; Select help window when opened
 (defvar compilation-scroll-output)
 (setq compilation-scroll-output 1)                          ;; Auto scroll compilation window
@@ -58,6 +59,7 @@
 (defvar compilation-first-error)
 (setq compilation-first-error 'first-error)                 ;; Stop scrolling compilation on first error
 (put 'dired-find-alternate-file 'disabled nil)
+(setq dired-listing-switches "-al --group-directories-first")
 
 ;; Ensure terminal scrolling does not break on output
 (defvar term-scroll-to-bottom-on-output)
