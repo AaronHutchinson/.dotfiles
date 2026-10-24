@@ -98,9 +98,10 @@
       '(("home"
 	 ("Code" (or (mode . c-mode)
 		     (mode . c++-mode)
-		     (mode . emacs-lisp-mode)
 		     (mode . python-mode)
 		     (mode . sh-mode)))
+	 ("Emacs" (or (mode . emacs-lisp-mode)
+		      (basename . "Makefile")))
 	 ("CMake" (or (basename . "CMakeLists.txt")
 		      (basename . "Makefile")))
 	 ("Data" (or (mode . yaml-mode)
