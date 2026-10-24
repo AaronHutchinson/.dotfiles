@@ -211,6 +211,8 @@
 (use-package lsp-mode
   :ensure t
   :hook ((c-mode c++-mode) . lsp)
+  :config
+  (setq lsp-enable-snippet nil)
   )
 
 (use-package magit
